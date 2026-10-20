@@ -1,6 +1,7 @@
 // Dati finti per provare tutto il giro (etichette → addestramento → prova) senza le foto vere:
 // "visi" color pelle con luce variabile, e su quelli da sudato gruppi di puntini lucidi (le zone sudate).
-// Scrive dati/finti/sudometro-finto.zip (stessa forma dello zip dell'admin) e dati/finti/etichette-finte.zip.
+// Scrive dati/finti/sudometro-finto.zip (stessa forma dello zip dell'admin), dati/finti/etichette-finte.zip
+// e dati/finti/punteggi-finti.json (voto 0-100: cresce con la quantità di puntini lucidi).
 //   node addestra/dati-finti.js
 
 import fs from 'node:fs';
@@ -65,7 +66,7 @@ function face(sweaty) {
       for (let k = 0; k < 3; k++) img[i * 3 + k] = Math.max(0, Math.min(255, c[k]));
     }
   }
-  return { img, mask };
+  return { img, mask, dots: dots.length };
 }
 
 async function jpeg(img) {
@@ -80,13 +81,15 @@ async function png(mask) {
 const photos = [];
 const labels = [];
 const json = { versione: 1, foto: {} };
+const scores = { versione: 1, punteggi: {} };
 for (const name of PEOPLE) {
   const ref = `riferimenti/${name}_attuale.jpg`;
   photos.push({ name: ref, data: await jpeg(face(false).img) });
   for (let k = 0; k < 4; k++) {
     const sweaty = k < 3; // una foto "da sudato" che in realtà è asciutta
     const file = `sudato/2026-10-1${k}_1930_${name}_${sweaty ? 70 : 10}.jpg`;
-    const { img, mask } = face(sweaty);
+    const { img, mask, dots } = face(sweaty);
+    scores.punteggi[file] = Math.max(0, Math.min(100, Math.round(dots * 0.9 + between(-5, 5)) + (sweaty ? 10 : 0)));
     photos.push({ name: file, data: await jpeg(img) });
     if (sweaty) {
       const m = `maschere/${file.replace(/\.jpg$/, '.png')}`;
@@ -102,4 +105,5 @@ fs.mkdirSync(OUT, { recursive: true });
 const write = async (file, files) => fs.writeFileSync(`${OUT}/${file}`, Buffer.from(await makeZip(files).arrayBuffer()));
 await write('sudometro-finto.zip', photos);
 await write('etichette-finte.zip', labels);
+fs.writeFileSync(`${OUT}/punteggi-finti.json`, JSON.stringify(scores, null, 2));
 console.log(`${photos.length} foto finte e ${labels.length - 1} maschere in ${OUT}/`);
