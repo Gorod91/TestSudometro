@@ -1,0 +1,51 @@
+{
+  "creato": "2026-10-20T13:17:51.812Z",
+  "ingresso": {
+    "H": 384,
+    "W": 288,
+    "griglia": [
+      48,
+      36
+    ]
+  },
+  "soglia": 0.4,
+  "foto": {
+    "totali": 21,
+    "conZoneSudate": 12,
+    "persone": 5
+  },
+  "epoche": 40,
+  "pesoSudato": 5.603,
+  "validazione": {
+    "soglia": 0.4,
+    "auc": 0.841,
+    "f1": 0.183,
+    "iou": 0.1,
+    "precisione": 0.114,
+    "richiamo": 0.459,
+    "riquadri": {
+      "sudati": 1123,
+      "asciutti": 34637
+    },
+    "quotaSopraSoglia": {
+      "fotoAsciutte": 0.117,
+      "fotoSudate": 0.149
+    }
+  },
+  "suFotoDiAddestramento": {
+    "soglia": 0.4,
+    "auc": 0.94,
+    "f1": 0.332,
+    "iou": 0.199,
+    "precisione": 0.212,
+    "richiamo": 0.76,
+    "riquadri": {
+      "sudati": 1123,
+      "asciutti": 34637
+    },
+    "quotaSopraSoglia": {
+      "fotoAsciutte": 0.088,
+      "fotoSudate": 0.143
+    }
+  }
+}
