@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>Etichette Sudometro</title>
+  <link rel="stylesheet" href="../stile.css">
+  <style>
+    #editor { position: fixed; inset: 0; background: #000; z-index: 10; display: flex; flex-direction: column; padding: max(8px, env(safe-area-inset-top)) 8px max(8px, env(safe-area-inset-bottom)); gap: 8px; }
+    #editor[hidden] { display: none; }
+    #stage { flex: 1; position: relative; overflow: hidden; touch-action: none; border-radius: 12px; background: #111; }
+    #layers { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+    #layers canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+    #mask { opacity: 0.5; }
+    #mask.hide { opacity: 0; }
+    #ed-title { font-size: 13px; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
+    .bar { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .bar button { padding: 10px 12px; }
+    #brush { width: 110px; }
+    .sw { display: inline-block; width: 12px; height: 12px; border-radius: 50%; }
+  </style>
+</head>
+<body>
+  <h1><span>Etichette</span> Sudometro</h1>
+  <p class="sub">Colorate le zone di pelle sudata: servono per addestrare il classificatore. Le foto restano su questo dispositivo.</p>
+
+  <div class="card">
+    <div class="row">
+      <label class="btn main">📦 Apri lo zip delle foto<input type="file" id="in-photos" accept=".zip,application/zip,image/*" multiple></label>
+      <label class="btn">↩︎ Importa etichette<input type="file" id="in-labels" accept=".zip,application/zip"></label>
+      <button id="btn-export">⬇︎ Esporta etichette</button>
+    </div>
+    <p class="dim" id="summary">Nessuna foto. Lo zip si scarica da Palestrina → Admin → "Scarica le foto del Sudometro".</p>
+    <div class="row">
+      <button id="f-todo" class="on">Da fare</button>
+      <button id="f-all">Tutte</button>
+      <button id="btn-clear" style="margin-left:auto">🗑 Svuota</button>
+    </div>
+  </div>
+
+  <details class="card">
+    <summary>Come colorare</summary>
+    <ul class="dim">
+      <li><b style="color:var(--pink)">Sudato</b>: pelle lucida a puntini, gocce, pelle bagnata, ciocche bagnate sulla fronte.</li>
+      <li><b style="color:var(--yellow)">Incerto</b>: quando non si capisce (ombre, riflessi della luce su pelle asciutta?). Non conta nell'addestramento.</li>
+      <li>Tutto il resto (pelle asciutta, capelli, sfondo, vestiti) resta senza colore = asciutto.</li>
+      <li><b>Tutto asciutto</b> per le foto senza sudore, <b>Scarta</b> per foto mosse, buie o senza viso.</li>
+      <li>Un dito disegna, due dita ingrandiscono e spostano. 👁 nasconde il colore per guardare la pelle.</li>
+      <li>I riferimenti (cartella <i>riferimenti</i>) contano già come asciutti: correggeteli solo se sono sudati.</li>
+    </ul>
+  </details>
+
+  <div class="grid" id="grid"></div>
+
+  <div id="editor" hidden>
+    <div class="bar">
+      <button id="ed-close">✕</button>
+      <span id="ed-title"></span>
+      <button id="ed-prev">‹</button>
+      <button id="ed-next">›</button>
+    </div>
+    <div id="stage"><div id="layers"><canvas id="photo"></canvas><canvas id="mask"></canvas></div></div>
+    <div class="bar">
+      <button id="t-sudato" class="on"><span class="sw" style="background:var(--pink)"></span>Sudato</button>
+      <button id="t-incerto"><span class="sw" style="background:var(--yellow)"></span>Incerto</button>
+      <button id="t-gomma">Gomma</button>
+      <input type="range" id="brush" min="6" max="80" value="28" aria-label="Dimensione del pennello">
+      <button id="ed-undo">↶</button>
+      <button id="ed-eye">👁</button>
+      <button id="ed-zoom">1×</button>
+      <button id="ed-suggest" hidden>✨ Proponi</button>
+    </div>
+    <div class="bar">
+      <button id="ed-dry">💧✕ Tutto asciutto</button>
+      <button id="ed-skip">Scarta</button>
+      <button id="ed-save" class="main" style="margin-left:auto">Salva ✓</button>
+    </div>
+  </div>
+
+  <script type="module" src="etichetta.js"></script>
+</body>
+</html>

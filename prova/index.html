@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Prova classificatore</title>
+  <link rel="stylesheet" href="../stile.css">
+  <style>
+    #big { width: 100%; max-width: 420px; display: block; margin: 12px auto; border-radius: 16px; }
+    #info { white-space: pre-wrap; }
+    .thumb .tag { font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body>
+  <h1><span>Zone sudate</span> prova</h1>
+  <p class="sub" id="status">Carico il modello…</p>
+
+  <div class="card">
+    <div class="row">
+      <label class="btn main">🤳 Selfie o foto<input type="file" id="in-photo" accept="image/*" capture="user"></label>
+      <label class="btn">📦 Zip del Sudometro<input type="file" id="in-zip" accept=".zip,application/zip"></label>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <span class="dim">Soglia</span>
+      <input type="range" id="thr" min="0.05" max="0.95" step="0.05" style="flex:1">
+      <span id="thr-v" class="dim"></span>
+      <button id="soft">Sfumata</button>
+    </div>
+    <p class="dim">Le foto vengono ritagliate al centro in 3:4: per una foto qualsiasi, inquadrate il viso come nel Sudometro.</p>
+  </div>
+
+  <canvas id="big" hidden></canvas>
+  <p class="dim" id="big-info" style="text-align:center"></p>
+  <div class="grid" id="grid"></div>
+  <details class="card"><summary>Misure del modello</summary><p class="dim" id="info"></p></details>
+
+  <script type="module" src="prova.js"></script>
+</body>
+</html>

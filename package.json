@@ -1,0 +1,14 @@
+{
+  "name": "test-sudometro",
+  "private": true,
+  "type": "module",
+  "description": "Laboratorio del classificatore delle zone di pelle sudata (per Palestrina)",
+  "scripts": {
+    "addestra": "node addestra/addestra.js",
+    "dati-finti": "node addestra/dati-finti.js",
+    "serve": "npx --yes http-server@14.1.1 -c-1 -p 8080 ."
+  },
+  "dependencies": {
+    "@tensorflow/tfjs-node": "4.22.0"
+  }
+}
